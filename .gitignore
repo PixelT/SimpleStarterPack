@@ -1,0 +1,9 @@
+.history/
+.idea/
+dist/css/
+dist/images/
+dist/js/
+node_modules/
+package-lock.json
+yarn-error.log
+yarn.lock
