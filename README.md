@@ -21,9 +21,9 @@ yarn install
 
 ## Additional information
 It's possible to pass to Browsersync custom settings, by adding additional arguments into `gulp dev` task:
-`--proxy="your_proxy_address"` - custom proxy URL address (default is `<your_folder_name>.test`)
-`--port="your_port"` - custom port (default is `3000`)
+- `--proxy="your_proxy_address"` - custom proxy URL address (default is `<your_folder_name>.test`)
+- `--port="your_port"` - custom port (default is `3000`)
 
 ## Gulp tasks
-`gulp` or `gulp build` - it compiles & minifies SCSS and JS, sourcemaps are disabled.
-`gulp dev` - it runs Browsersync with sourcemaps enabled.
+- `gulp` or `gulp build` - it compiles & minifies SCSS and JS, sourcemaps are disabled.
+- `gulp dev` - it runs Browsersync with sourcemaps enabled.
