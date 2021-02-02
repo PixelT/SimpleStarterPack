@@ -37,7 +37,7 @@ $.gulp.task('compileScss', () => {
 });
 
 $.gulp.task('compileJs', () => {
-    return $.gulp.src('src/js/function.js')
+    return $.gulp.src('src/js/**/*.js')
 	.pipe($.plumber({
 		errorHandler (err) {
 			$.notify.onError({
@@ -78,7 +78,7 @@ $.gulp.task('optimizeSVG', () => {
 })
 
 $.gulp.task('watch', $.gulp.parallel(['browserSync'], () => {
-    $.gulp.watch('**/*.php, **/*.html', {cwd:'./'}).on('change', $.browserSync.reload);
+    $.gulp.watch(['**/*.php', '**/*.html'], {cwd:'./'}).on('change', $.browserSync.reload);
     $.gulp.watch('src/js/**/*.js', {cwd: './'}, $.gulp.parallel(['compileJs']));
     $.gulp.watch('src/scss/**/*.scss', {cwd: './'}, $.gulp.parallel(['compileScss']));
     $.gulp.watch('src/images/**/*.{png,gif,jpg}', {cwd: './'}, $.gulp.parallel(['optimizeImages']));
