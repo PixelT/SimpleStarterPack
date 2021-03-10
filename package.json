@@ -1,7 +1,7 @@
 {
   "name": "simple-starter-pack",
-  "version": "v1.0.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Simple HTML5 + (S)CSS + JS starter pack (boilerplate) with pre-configured usefull tools & libraries",
   "main": "src/function.js",
   "scripts": {
     "postinstall": "gulp build"
@@ -9,12 +9,28 @@
   "browserslist": [
     "defaults"
   ],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PixelT/SimpleStarterPack.git"
+  },
+  "author": "Krzysztof Kula",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PixelT/SimpleStarterPack/issues"
+  },
+  "homepage": "https://github.com/PixelT/SimpleStarterPack#readme",
+  "keywords": [
+    "boilerplate",
+    "starter",
+    "kit",
+    "starter-kit",
+    "live reload",
+    "html5"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "browser-sync": "^2.26.13",
+    "@babel/core": "^7.13.8",
+    "@babel/preset-env": "^7.13.9",
+    "browser-sync": "^2.26.14",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-babel": "^8.0.0",
@@ -29,6 +45,7 @@
     "gulp-uglify": "^3.0.2",
     "include-media": "^1.4.9",
     "jsdom-quokka-plugin": "^1.0.16",
+    "mdcolorize": "^1.0.1",
     "normalize.css": "^8.0.1",
     "path": "^0.12.7",
     "yargs": "^16.2.0"
