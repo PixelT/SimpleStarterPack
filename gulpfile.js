@@ -1,4 +1,13 @@
-const $ = require('gulp-load-plugins')({'pattern': '*'});
+const $ = require('gulp-load-plugins')({
+    'pattern': '*',
+    'postRequireTransforms': {
+        sass: function(sass) {
+            return sass(require('sass'));
+        }
+    },
+    'scope': ['devDependencies'],
+});
+
 const isDev = process.argv[process.argv.length - 1] === 'dev';
 const port = ($.yargs.argv.port) ? $.yargs.argv.port : 3000;
 const proxy = ($.yargs.argv.proxy) ? $.yargs.argv.proxy : false;
