@@ -1,6 +1,6 @@
 {
   "name": "simple-starter-pack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple HTML5 + (S)CSS + JS starter pack (boilerplate) with pre-configured usefull tools & libraries",
   "main": "src/function.js",
   "scripts": {
