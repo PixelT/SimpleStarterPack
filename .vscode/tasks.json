@@ -5,14 +5,14 @@
     "tasks": [
         {
             "label": "Gulp: build",
-            "type": "shell",
-            "command": "gulp build",
+            "type": "gulp",
+            "task": "build",
             "problemMatcher": [],
         },
         {
             "label": "Gulp: dev",
-            "type": "shell",
-            "command": "gulp dev",
+            "type": "gulp",
+            "task": "dev",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

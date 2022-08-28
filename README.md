@@ -1,8 +1,8 @@
 # SSP » Simple Starter Pack
-Simple HTML5 + (S)CSS + JS starter pack (boilerplate) with pre-configured usefull tools & libraries:
+Simple HTML5 + (S)CSS + TypeScript starter pack (boilerplate) with pre-configured usefull tools & libraries:
 - Live reload & sync (using [Browsersync](https://browsersync.io/))
 - SCSS compile with autoprefixer, sourcemaps and minification
-- JS compile (using [Babel](https://babeljs.io/)) with sourcemaps and minification
+- TypeScript compile (using [Webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/)) with sourcemaps and minification
 - JPG / PNG / GIF images optimization (with imagemin)
 - SVG optimization (with SVGO)
 - Predefined tasks for VSCode editor
@@ -23,12 +23,15 @@ git clone https://github.com/PixelT/SimpleStarterPack.git path/to/your/project
 cd path/to/your/project
 yarn install
 ```
-
-## Additional information
-It's possible to pass to Browsersync custom settings, by adding additional arguments into `gulp dev` task:
-- `--proxy="your_proxy_address"` - custom proxy URL address (default is `<your_folder_name>.test`)
-- `--port="your_port"` - custom port (default is `3000`)
-
 ## Gulp tasks
-- `gulp` or `gulp build` - it compiles & minifies SCSS and JS, sourcemaps are disabled.
-- `gulp dev` - it runs Browsersync with sourcemaps enabled.
+- `gulp` or `gulp build` - it compiles & minifies SCSS and TypeScript, sourcemaps are disabled.
+- `gulp dev` - it runs Browsersync in developer mode, with sourcemaps enabled.
+
+## Static vs Dynamic sites
+By default, SSP are using `html` file(s) and run in `server` mode - no action is needed here.
+If you have already running local PHP server (MAMP / XAMP / WAMP etc.) you can use `dynamic` mode - change index.html to index.php and run `gulp dev` task with `--proxy` argument (see below)
+
+## Pass custom settings
+It's possible to pass to Browsersync custom settings, by adding additional arguments into `gulp dev` task:
+- `--proxy` or `--proxy="your_proxy_address"` - custom proxy URL address (default is `<your_folder_name>.test`)
+- `--port="your_port"` - custom port for `proxy` (default is `3000`)

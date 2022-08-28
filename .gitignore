@@ -1,3 +1,4 @@
+*.todo
 .history/
 .idea/
 dist/css/

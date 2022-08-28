@@ -15,25 +15,36 @@ const proxy = ($.yargs.argv.proxy) ? $.yargs.argv.proxy : false;
 let folderPath = (process.platform === 'darwin') ? __dirname.split('/') : __dirname.split('\\');
     folderPath = folderPath[folderPath.length-1].replace(/([A-Z:\\]*[_]+)/g, '');
 
+    
 $.gulp.task('browserSync', () => {
+    const static = {
+        baseDir: "./",
+        serveStaticOptions: {
+            extensions: ["html"]
+        }
+    }
+    const dynamic = (typeof proxy === 'string' || proxy instanceof String) ? proxy : folderPath + '.test';
+    const serverMode = proxy ? 'proxy' : 'server';
+    
     return $.browserSync.init({
-        proxy: proxy || folderPath + '.test',
+        [serverMode]: serverMode === 'proxy' ? dynamic : static,
         port: port,
         notify: true,
-        open: false
+        open: false,
+        logPrefix: "SimpleStarterPack",
     });
 });
+
 
 $.gulp.task('compileScss', () => {
     return $.gulp.src('src/scss/style.scss')
 	.pipe($.plumber({
 		errorHandler (err) {
-			$.notify.onError({
-				title: (err) => `${err.file.replace(`${process.cwd()}/`, '')}:${err.line}:${err.column}`,
-				message: (err) => err.messageOriginal.trim(),
-				icon: $.path.join(__dirname, ".vscode/icons/icon-sass.png"),
-				sound: 'Frog',
-			})(err)
+			$.nodeNotifier.notify({
+				title: `SCSS error in:`,
+				message: `${err.file.replace(`${process.cwd()}/`, '')}:${err.line}:${err.column}`,
+				sound: true,
+            });
 			this.emit('end');
 		}
 	}))
@@ -45,28 +56,30 @@ $.gulp.task('compileScss', () => {
     .pipe($.browserSync.stream({ match: '**/*.css' }))
 });
 
-$.gulp.task('compileJs', () => {
-    return $.gulp.src('src/js/**/*.js')
-	.pipe($.plumber({
-		errorHandler (err) {
-			$.notify.onError({
-				title: (err) => `${err.fileName.replace(`${process.cwd()}/`, '')}:${err.loc.line}:${err.loc.column}`,
-				message: (err) => `${err.message.split('\n')[0].replace(`${err.fileName}: `, '')}`.trim(),
-				icon: $.path.join(__dirname, ".vscode/icons/icon-js.png"),
-				sound: 'Frog',
-			})(err)
-			this.emit('end');
-		}
-	}))
-    .pipe($.if(isDev, $.sourcemaps.init()))
-    .pipe($.babel({
-        presets: ['@babel/env']
+
+$.gulp.task('compileTs', () => {
+    return $.gulp.src('src/js/app.ts')
+    .pipe($.plumber())
+    .pipe($.webpackStream({
+        mode: 'none',
+        module: { rules: [{ test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/, }], },
+        output: { filename: 'app.js', },
+        resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'], },
+    }, null, (err, stats) => {
+        if (stats.compilation.errors.length >= 1) {
+            const errorMessage = stats.compilation.errors[0].message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+            const path = errorMessage.split('\n')[0].replace(/\[tsl\] ERROR in/, '').replace(`${process.cwd()}/`, '').replace('(', '').replace(',' ,':').replace(')', '');
+
+            $.nodeNotifier.notify({
+				title: `TS error in:`,
+				message: `${path}`,
+				sound: true
+            });
+        }
     }))
-    .pipe($.uglify())
-    .pipe($.if(isDev, $.sourcemaps.write()))
     .pipe($.gulp.dest('dist/js'))
-    .pipe($.browserSync.stream({match: '**/*.js'}))
 });
+
 
 $.gulp.task('optimizeImages', () => {
     return $.gulp.src('src/images/**/*.{png,gif,jpg}')
@@ -78,6 +91,7 @@ $.gulp.task('optimizeImages', () => {
     .pipe($.browserSync.stream({match: '**/*.{png,gif,jpg}'}))
 });
 
+
 $.gulp.task('optimizeSVG', () => {
     return $.gulp.src('src/images/**/*.svg')
     .pipe($.plumber())
@@ -86,15 +100,18 @@ $.gulp.task('optimizeSVG', () => {
     .pipe($.browserSync.stream({match: '**/*.svg'}))
 })
 
+
 $.gulp.task('watch', $.gulp.parallel(['browserSync'], () => {
     $.gulp.watch(['**/*.php', '**/*.html'], {cwd:'./'}).on('change', $.browserSync.reload);
-    $.gulp.watch('src/js/**/*.js', {cwd: './'}, $.gulp.parallel(['compileJs']));
+    $.gulp.watch('src/js/**/*.ts', {cwd: './'}, $.gulp.parallel(['compileTs'])).on('change', $.browserSync.reload);
     $.gulp.watch('src/scss/**/*.scss', {cwd: './'}, $.gulp.parallel(['compileScss']));
     $.gulp.watch('src/images/**/*.{png,gif,jpg}', {cwd: './'}, $.gulp.parallel(['optimizeImages']));
     $.gulp.watch('src/images/**/*.svg', {cwd: './'}, $.gulp.parallel(['optimizeSVG']));
 }));
 
-$.gulp.task('dev', $.gulp.series('compileScss', 'compileJs', $.gulp.parallel('optimizeImages', 'optimizeSVG'), 'watch'));
-$.gulp.task('build', $.gulp.series('compileScss', 'compileJs', $.gulp.parallel('optimizeImages', 'optimizeSVG')));
+
+$.gulp.task('dev', $.gulp.series('compileScss', 'compileTs', $.gulp.parallel('optimizeImages', 'optimizeSVG'), 'watch'));
+$.gulp.task('build', $.gulp.series('compileScss', 'compileTs', $.gulp.parallel('optimizeImages', 'optimizeSVG')));
+
 
 $.gulp.task('default', $.gulp.series(['build']));
